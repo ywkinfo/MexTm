@@ -21,8 +21,8 @@
   --accent-soft: rgba(14, 107, 109, 0.12);
   --warm: #b45f2f;
   --shadow: 0 20px 60px rgba(52, 43, 29, 0.12);
-  --content-width: 920px;
-  --layout-width: 1680px;
+  --content-width: 1180px;
+  --layout-width: 1760px;
 }
 
 * {
@@ -83,8 +83,7 @@ input {
 .topbar-kicker,
 .hero-kicker,
 .chapter-eyebrow,
-.sidebar-eyebrow,
-.toc-eyebrow {
+.sidebar-eyebrow {
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -123,12 +122,7 @@ input {
   padding: 1.25rem;
 }
 
-.reader-layout.has-toc {
-  grid-template-columns: 280px minmax(0, 1fr) 260px;
-}
-
-.left-rail,
-.right-rail {
+.left-rail {
   position: sticky;
   top: 5.75rem;
   align-self: start;
@@ -146,14 +140,12 @@ input {
   width: 100%;
 }
 
-.sidebar-nav,
-.section-toc {
+.sidebar-nav {
   padding: 1.2rem;
 }
 
 .sidebar-list,
-.sidebar-sublist,
-.toc-list {
+.sidebar-sublist {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -164,7 +156,6 @@ input {
 }
 
 .sidebar-link,
-.toc-link,
 .sidebar-subitem {
   display: block;
   border-radius: 14px;
@@ -174,34 +165,25 @@ input {
 }
 
 .sidebar-link:hover,
-.toc-link:hover,
 .sidebar-subitem:hover {
   background: rgba(255, 255, 255, 0.54);
   color: var(--ink);
 }
 
-.sidebar-link.active,
-.toc-link.active {
+.sidebar-link.active {
   background: var(--accent-soft);
   color: var(--accent);
   font-weight: 700;
 }
 
-.sidebar-sublist,
-.toc-list .toc-list {
+.sidebar-sublist {
   margin-left: 0.8rem;
   padding-left: 0.4rem;
   border-left: 1px solid var(--border);
 }
 
-.sidebar-subitem,
-.toc-list .toc-link {
+.sidebar-subitem {
   font-size: 0.92rem;
-}
-
-.toc-empty {
-  color: var(--muted);
-  font-size: 0.95rem;
 }
 
 .search-shell {
@@ -286,7 +268,7 @@ input {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  width: min(100%, 1120px);
+  width: min(100%, var(--content-width));
   margin: 0 auto;
 }
 
@@ -364,7 +346,7 @@ input {
 }
 
 .article {
-  width: min(100%, var(--content-width));
+  width: 100%;
   margin: 0 auto;
   border: 1px solid var(--border);
   border-radius: 30px;
@@ -520,10 +502,6 @@ input {
   .reader-layout {
     grid-template-columns: 240px minmax(0, 1fr);
   }
-
-  .right-rail {
-    display: none;
-  }
 }
 
 @media (max-width: 920px) {
@@ -545,8 +523,7 @@ input {
     padding: 1rem;
   }
 
-  .left-rail,
-  .right-rail {
+  .left-rail {
     position: fixed;
     top: 5.4rem;
     bottom: 1rem;
@@ -561,14 +538,7 @@ input {
     left: 1rem;
   }
 
-  .right-rail {
-    right: 1rem;
-    display: block;
-    transform: translateX(120%);
-  }
-
-  .left-rail.open,
-  .right-rail.open {
+  .left-rail.open {
     transform: translateX(0);
   }
 

@@ -15,10 +15,7 @@ import {
 import { documentData } from "./content";
 import { MarkdownArticle } from "./components/MarkdownArticle";
 import { SearchPanel } from "./components/SearchPanel";
-import { SectionToc } from "./components/SectionToc";
 import { SidebarNav } from "./components/SidebarNav";
-import { useActiveHeading } from "./hooks/useActiveHeading";
-import { flattenHeadings } from "./lib/outline";
 import type { Chapter } from "./types";
 
 const chapters = documentData.chapters;
@@ -41,18 +38,11 @@ function ReaderShell() {
   const location = useLocation();
   const chapterMatch = matchPath("/chapter/:chapterSlug", location.pathname);
   const currentChapterSlug = decodeRouteSegment(chapterMatch?.params.chapterSlug);
-  const currentChapter = currentChapterSlug ? chapterMap.get(currentChapterSlug) : undefined;
-  const hasActiveToc = Boolean(currentChapter && currentChapter.headings.length > 0);
-
-  const headingIds = flattenHeadings(currentChapter?.headings ?? []).map((heading) => heading.id);
-  const activeHeadingId = useActiveHeading(headingIds);
 
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const [isTocOpen, setIsTocOpen] = useState(false);
 
   useEffect(() => {
     setIsNavOpen(false);
-    setIsTocOpen(false);
   }, [location.pathname, location.hash]);
 
   const navigateToSection = (chapterSlug: string, sectionId?: string) => {
@@ -80,19 +70,10 @@ function ReaderShell() {
             목차
           </button>
           <SearchPanel onNavigate={navigateToSection} />
-          {hasActiveToc ? (
-            <button
-              className="topbar-button mobile-only"
-              type="button"
-              onClick={() => setIsTocOpen((open) => !open)}
-            >
-              섹션
-            </button>
-          ) : null}
         </div>
       </header>
 
-      <div className={`reader-layout ${hasActiveToc ? "has-toc" : "no-toc"}`}>
+      <div className="reader-layout">
         <aside className={`left-rail ${isNavOpen ? "open" : ""}`}>
           <SidebarNav
             chapters={chapters}
@@ -104,27 +85,15 @@ function ReaderShell() {
         <main className="content-pane">
           <Outlet />
         </main>
-
-        {hasActiveToc ? (
-          <aside className={`right-rail ${isTocOpen ? "open" : ""}`}>
-            <SectionToc
-              chapterSlug={currentChapter?.slug}
-              headings={currentChapter?.headings ?? []}
-              activeHeadingId={activeHeadingId}
-              onNavigate={() => setIsTocOpen(false)}
-            />
-          </aside>
-        ) : null}
       </div>
 
-      {(isNavOpen || isTocOpen) && (
+      {isNavOpen && (
         <button
           className="mobile-scrim"
           type="button"
           aria-label="열린 패널 닫기"
           onClick={() => {
             setIsNavOpen(false);
-            setIsTocOpen(false);
           }}
         />
       )}
