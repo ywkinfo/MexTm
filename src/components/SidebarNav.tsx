@@ -1,45 +1,12 @@
 import { NavLink } from "react-router-dom";
 
-import type { Chapter, HeadingNode } from "../types";
+import type { Chapter } from "../types";
 
 type SidebarNavProps = {
   chapters: Chapter[];
   currentChapterSlug?: string;
   onNavigate?: () => void;
 };
-
-function NestedHeadingList({
-  headings,
-  chapterSlug,
-  onNavigate
-}: {
-  headings: HeadingNode[];
-  chapterSlug: string;
-  onNavigate?: () => void;
-}) {
-  return (
-    <ul className="sidebar-sublist">
-      {headings.map((heading) => (
-        <li key={heading.id}>
-          <NavLink
-            className="sidebar-subitem"
-            to={`/chapter/${chapterSlug}#${heading.id}`}
-            onClick={onNavigate}
-          >
-            {heading.title}
-          </NavLink>
-          {heading.children.length > 0 ? (
-            <NestedHeadingList
-              headings={heading.children}
-              chapterSlug={chapterSlug}
-              onNavigate={onNavigate}
-            />
-          ) : null}
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 export function SidebarNav({
   chapters,
@@ -64,13 +31,6 @@ export function SidebarNav({
               >
                 {chapter.title}
               </NavLink>
-              {isActive && chapter.headings.length > 0 ? (
-                <NestedHeadingList
-                  headings={chapter.headings}
-                  chapterSlug={chapter.slug}
-                  onNavigate={onNavigate}
-                />
-              ) : null}
             </li>
           );
         })}

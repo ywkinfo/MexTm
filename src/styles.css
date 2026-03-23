@@ -144,8 +144,7 @@ input {
   padding: 1.2rem;
 }
 
-.sidebar-list,
-.sidebar-sublist {
+.sidebar-list {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -155,8 +154,7 @@ input {
   margin-top: 0.4rem;
 }
 
-.sidebar-link,
-.sidebar-subitem {
+.sidebar-link {
   display: block;
   border-radius: 14px;
   padding: 0.55rem 0.75rem;
@@ -164,8 +162,7 @@ input {
   transition: background-color 120ms ease, color 120ms ease, transform 120ms ease;
 }
 
-.sidebar-link:hover,
-.sidebar-subitem:hover {
+.sidebar-link:hover {
   background: rgba(255, 255, 255, 0.54);
   color: var(--ink);
 }
@@ -174,16 +171,6 @@ input {
   background: var(--accent-soft);
   color: var(--accent);
   font-weight: 700;
-}
-
-.sidebar-sublist {
-  margin-left: 0.8rem;
-  padding-left: 0.4rem;
-  border-left: 1px solid var(--border);
-}
-
-.sidebar-subitem {
-  font-size: 0.92rem;
 }
 
 .search-shell {
