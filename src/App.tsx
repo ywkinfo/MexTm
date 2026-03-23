@@ -24,12 +24,25 @@ import type { Chapter } from "./types";
 const chapters = documentData.chapters;
 const chapterMap = new Map(chapters.map((chapter) => [chapter.slug, chapter]));
 
+function decodeRouteSegment(value?: string) {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
 function ReaderShell() {
   const navigate = useNavigate();
   const location = useLocation();
   const chapterMatch = matchPath("/chapter/:chapterSlug", location.pathname);
-  const currentChapterSlug = chapterMatch?.params.chapterSlug;
+  const currentChapterSlug = decodeRouteSegment(chapterMatch?.params.chapterSlug);
   const currentChapter = currentChapterSlug ? chapterMap.get(currentChapterSlug) : undefined;
+  const hasActiveToc = Boolean(currentChapter && currentChapter.headings.length > 0);
 
   const headingIds = flattenHeadings(currentChapter?.headings ?? []).map((heading) => heading.id);
   const activeHeadingId = useActiveHeading(headingIds);
@@ -67,17 +80,19 @@ function ReaderShell() {
             목차
           </button>
           <SearchPanel onNavigate={navigateToSection} />
-          <button
-            className="topbar-button mobile-only"
-            type="button"
-            onClick={() => setIsTocOpen((open) => !open)}
-          >
-            섹션
-          </button>
+          {hasActiveToc ? (
+            <button
+              className="topbar-button mobile-only"
+              type="button"
+              onClick={() => setIsTocOpen((open) => !open)}
+            >
+              섹션
+            </button>
+          ) : null}
         </div>
       </header>
 
-      <div className="reader-layout">
+      <div className={`reader-layout ${hasActiveToc ? "has-toc" : "no-toc"}`}>
         <aside className={`left-rail ${isNavOpen ? "open" : ""}`}>
           <SidebarNav
             chapters={chapters}
@@ -90,14 +105,16 @@ function ReaderShell() {
           <Outlet />
         </main>
 
-        <aside className={`right-rail ${isTocOpen ? "open" : ""}`}>
-          <SectionToc
-            chapterSlug={currentChapter?.slug}
-            headings={currentChapter?.headings ?? []}
-            activeHeadingId={activeHeadingId}
-            onNavigate={() => setIsTocOpen(false)}
-          />
-        </aside>
+        {hasActiveToc ? (
+          <aside className={`right-rail ${isTocOpen ? "open" : ""}`}>
+            <SectionToc
+              chapterSlug={currentChapter?.slug}
+              headings={currentChapter?.headings ?? []}
+              activeHeadingId={activeHeadingId}
+              onNavigate={() => setIsTocOpen(false)}
+            />
+          </aside>
+        ) : null}
       </div>
 
       {(isNavOpen || isTocOpen) && (
@@ -150,12 +167,13 @@ function HomePage() {
 function ChapterPage() {
   const { chapterSlug } = useParams();
   const location = useLocation();
+  const normalizedChapterSlug = decodeRouteSegment(chapterSlug);
 
-  if (!chapterSlug) {
+  if (!normalizedChapterSlug) {
     return <Navigate to="/" replace />;
   }
 
-  const chapter = chapterMap.get(chapterSlug);
+  const chapter = chapterMap.get(normalizedChapterSlug);
 
   useEffect(() => {
     const anchor = location.hash.replace(/^#/, "");
@@ -173,7 +191,7 @@ function ChapterPage() {
     return () => {
       window.cancelAnimationFrame(frame);
     };
-  }, [chapterSlug, location.hash]);
+  }, [normalizedChapterSlug, location.hash]);
 
   if (!chapter) {
     return <Navigate to="/" replace />;

@@ -21,7 +21,8 @@
   --accent-soft: rgba(14, 107, 109, 0.12);
   --warm: #b45f2f;
   --shadow: 0 20px 60px rgba(52, 43, 29, 0.12);
-  --content-width: 820px;
+  --content-width: 920px;
+  --layout-width: 1680px;
 }
 
 * {
@@ -115,9 +116,15 @@ input {
 
 .reader-layout {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr) 260px;
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: 1.25rem;
+  width: min(100%, var(--layout-width));
+  margin: 0 auto;
   padding: 1.25rem;
+}
+
+.reader-layout.has-toc {
+  grid-template-columns: 280px minmax(0, 1fr) 260px;
 }
 
 .left-rail,
@@ -136,6 +143,7 @@ input {
 
 .content-pane {
   min-width: 0;
+  width: 100%;
 }
 
 .sidebar-nav,
@@ -278,6 +286,8 @@ input {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  width: min(100%, 1120px);
+  margin: 0 auto;
 }
 
 .hero-card,
